@@ -473,22 +473,6 @@ El código está completamente documentado en `script.js` con:
 
 ---
 
-## Rubrica de Evaluación (Auto-evaluación)
-
-| Criterio | Cumplido | Evidencia |
-|----------|----------|-----------|
-| Problema JS identificado |  | Funciones de Orden Superior |
-| Pensamiento divergente |  | Combinación con estadísticas deportivas |
-| Desafío del sesgo |  | Sin métodos nativos map/filter/reduce |
-| Código alternativo implementado |  | Recursión, iteración, composición |
-| Optimizaciones documentadas |  | 2 mejoras significativas implementadas |
-| Análisis de impacto |  | Tabla de mejoras de performance |
-| Código comentado |  | Completamente documentado |
-| Visualización |  | Diagrama PNG incluido |
-| Documentación reflexiva |  | Este README.md |
-
----
-
 ## Troubleshooting Técnico
 
 ### Problema: Blank page o archivos no cargan
