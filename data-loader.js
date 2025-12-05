@@ -1,11 +1,9 @@
 /**
- * API Handler - Integración con football-data.org (API Real Gratuita)
- * Fetch de datos reales de futbolistas desde API pública
- * Fuente: https://www.football-data.org (API gratuita)
+ * Data Loader - Gestor de Datos Dinámicos
+ * Carga y genera datos de equipos de fútbol con nombres reales
  */
 
-// Mapeo de equipos con sus IDs en football-data.org
-// Estos IDs son reales y corresponden a equipos en las principales ligas
+// Mapeo de equipos con jugadores reales
 const TEAMS_DATA = {
     'Manchester United': {
         id: 66,
@@ -70,8 +68,8 @@ const TEAMS_DATA = {
 };
 
 /**
- * Generador de Datos Dinámicos con Nombres Reales
- * Simula carga de datos de equipos profesionales
+ * Cargar datos de un equipo específico
+ * Genera estadísticas dinámicas con nombres reales de jugadores
  */
 async function cargarEquipoDesdeAPI(teamName) {
     const teamData = TEAMS_DATA[teamName];
@@ -84,7 +82,7 @@ async function cargarEquipoDesdeAPI(teamName) {
     try {
         mostrarCargando(true);
         
-        // Simular delay de API (para realismo)
+        // Simular delay de carga (para realismo)
         await new Promise(resolve => setTimeout(resolve, 800));
         
         // Generar datos con nombres reales del equipo
@@ -110,40 +108,48 @@ async function cargarEquipoDesdeAPI(teamName) {
 }
 
 /**
- * Generar datos dinámicos realistas para jugadores
+ * Generar datos realistas para un jugador
+ * Varía estadísticas según posición estimada
  */
 function generarDatosJugador(nombre, index) {
-    // Variación según posición (simulada por índice)
+    // Distribuir posiciones: primeros 3 delanteros, siguientes 5 mediocampistas, resto defensas
     const esDelantero = index < 3;
     const esMedio = index >= 3 && index < 8;
     const esDefensa = index >= 8;
     
-    const goles = esDelantero ? Math.floor(Math.random() * 35) + 5 : 
-                  esMedio ? Math.floor(Math.random() * 15) : 
-                  Math.floor(Math.random() * 4);
+    // Generar goles según posición
+    const goles = esDelantero ? 
+        Math.floor(Math.random() * 35) + 5 :   // Delanteros: 5-40 goles
+        esMedio ? 
+        Math.floor(Math.random() * 15) :       // Mediocampistas: 0-15 goles
+        Math.floor(Math.random() * 4);         // Defensas: 0-4 goles
     
-    const asistencias = esMedio ? Math.floor(Math.random() * 20) : 
-                        esDelantero ? Math.floor(Math.random() * 12) : 
-                        Math.floor(Math.random() * 8);
+    // Generar asistencias según posición
+    const asistencias = esMedio ? 
+        Math.floor(Math.random() * 20) :       // Mediocampistas: 0-20 asistencias
+        esDelantero ? 
+        Math.floor(Math.random() * 12) :       // Delanteros: 0-12 asistencias
+        Math.floor(Math.random() * 8);         // Defensas: 0-8 asistencias
     
     return {
         id: index + 1,
         nombre: nombre,
         goles: goles,
         asistencias: asistencias,
-        minutos: Math.floor(Math.random() * 1800) + 1200,
-        tarjetas: Math.floor(Math.random() * 4),
+        minutos: Math.floor(Math.random() * 1800) + 1200,  // 1200-3000 minutos
+        tarjetas: Math.floor(Math.random() * 4),            // 0-4 tarjetas
         posicion: esDelantero ? 'Delantero' : esMedio ? 'Mediocampista' : 'Defensa'
     };
 }
 
 /**
- * Cargar equipos disponibles en el selector
+ * Cargar y mostrar el selector de equipos
  */
 function cargarSelectorEquipos() {
     const select = document.getElementById('teamSelect');
     select.innerHTML = '<option value="">-- Selecciona un equipo --</option>';
     
+    // Agregar cada equipo al selector
     Object.keys(TEAMS_DATA).forEach(teamName => {
         const option = document.createElement('option');
         option.value = teamName;
@@ -151,7 +157,7 @@ function cargarSelectorEquipos() {
         select.appendChild(option);
     });
 
-    // Event listener para cambios
+    // Manejar cambios de equipo
     select.addEventListener('change', async (e) => {
         if (e.target.value) {
             await cargarEquipoDesdeAPI(e.target.value);
@@ -160,7 +166,7 @@ function cargarSelectorEquipos() {
 }
 
 /**
- * Mostrar indicador de carga
+ * Mostrar/ocultar indicador de carga
  */
 function mostrarCargando(mostrar) {
     const indicator = document.getElementById('loadingIndicator');
@@ -170,7 +176,7 @@ function mostrarCargando(mostrar) {
 }
 
 /**
- * Mostrar error en la página
+ * Mostrar mensaje de error en la página
  */
 function mostrarErrorEnPagina(mensaje) {
     const output = document.getElementById('output');
@@ -183,5 +189,5 @@ function mostrarErrorEnPagina(mensaje) {
     }
 }
 
-// Inicializar cuando la página cargue
+// Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', cargarSelectorEquipos);
