@@ -600,22 +600,22 @@ function generarDatosJugador(nombre, index) {
 
 | Equipo | Liga | Jugadores Reales |
 |--------|------|------------------|
-| Manchester United | English Premier League | ✅ |
-| Manchester City | English Premier League | ✅ |
-| Liverpool | English Premier League | ✅ |
-| Arsenal | English Premier League | ✅ |
-| Chelsea | English Premier League | ✅ |
-| Real Madrid | Spanish La Liga | ✅ |
-| Barcelona | Spanish La Liga | ✅ |
-| Paris Saint-Germain | French Ligue 1 | ✅ |
-| Bayern Munich | German Bundesliga | ✅ |
-| Juventus | Italian Serie A | ✅ |
+| Manchester United | English Premier League | Si |
+| Manchester City | English Premier League | Si |
+| Liverpool | English Premier League | Si |
+| Arsenal | English Premier League | Si |
+| Chelsea | English Premier League | Si |
+| Real Madrid | Spanish La Liga | Si |
+| Barcelona | Spanish La Liga | Si |
+| Paris Saint-Germain | French Ligue 1 | Si |
+| Bayern Munich | German Bundesliga | Si |
+| Juventus | Italian Serie A | Si |
 
 ### Verificar en Consola
 
 Abre la consola (F12) y selecciona un equipo. Verás:
 ```
-✅ Equipo cargado: Manchester United
+[OK] Equipo cargado: Manchester United
 Jugadores: Bruno Fernandes, Harry Maguire, Aaron Wan-Bissaka, Luke Shaw, David de Gea
 ```
 
@@ -628,10 +628,10 @@ Las APIs de fútbol gratuitas tienen limitaciones:
 - **Datos incompletos:** Muchas no devuelven stats actualizadas
 
 Esta solución es **perfecta para demostración** porque:
-- ✅ Funciona sin configuración adicional
-- ✅ No tiene límites de uso
-- ✅ Usa nombres reales de jugadores actuales
-- ✅ Genera datos realistas con distribuciones correctas
+- Si: Funciona sin configuración adicional
+- Si: No tiene límites de uso
+- Si: Usa nombres reales de jugadores actuales
+- Si: Genera datos realistas con distribuciones correctas
 
 ---
 

@@ -72,7 +72,7 @@ Quiero que sea alternativa y creativa. Algunas ideas:
 La IA sugirió tres enfoques:
 1. **Recursión:** Educativa pero puede causar stack overflow
 2. **Iteradores/Generadores:** Elegante pero avanzado
-3. **Callbacks:** Balance entre claridad y alternativa real ✅
+3. **Callbacks:** Balance entre claridad y alternativa real [ELEGIDO]
 
 Se eligió una **combinación de:
 - Iteración manual (loops con control explícito)
@@ -174,7 +174,7 @@ Enfócate en performance y mantenibilidad."
 
 **Problema Identificado:**
 ```javascript
-// ❌ ANTES (recursivo)
+// [NO-RECOMENDADO] ANTES (recursivo)
 function filtrarRecursivo(array, criterio, indice = 0, acumulado = []) {
     if (indice >= array.length) {
         return acumulado;
@@ -189,7 +189,7 @@ function filtrarRecursivo(array, criterio, indice = 0, acumulado = []) {
 
 **Solución Implementada:**
 ```javascript
-// ✅ DESPUÉS (iterativo)
+// [RECOMENDADO] DESPUÉS (iterativo)
 function filtrarIterativo(coleccion, criterio) {
     const resultado = [];
     let i = 0;
@@ -208,7 +208,7 @@ function filtrarIterativo(coleccion, criterio) {
 | Métrica | Antes | Después | Mejora |
 |---------|-------|---------|--------|
 | Arrays 1,000 items | 5ms | 1.2ms | **4.1x** |
-| Arrays 10,000 items | Stack Error | 12ms | **Infinito** ✅ |
+| Arrays 10,000 items | Stack Error | 12ms | **Infinito [FIXED]** |
 | Stack Memory | O(n) | O(1) | 100% |
 
 ---
@@ -217,7 +217,7 @@ function filtrarIterativo(coleccion, criterio) {
 
 **Problema Identificado:**
 ```javascript
-// ❌ ANTES (sin validación)
+// [NO-RECOMENDADO] ANTES (sin validación)
 function procesarConCallback(coleccion, callback) {
     const resultado = new Array(coleccion.length);
     for (let i = 0; i < coleccion.length; i++) {
@@ -230,7 +230,7 @@ function procesarConCallback(coleccion, callback) {
 
 **Solución Implementada:**
 ```javascript
-// ✅ DESPUÉS (con validación y contexto)
+// [RECOMENDADO] DESPUÉS (con validación y contexto)
 function procesarConCallback(coleccion, callback, contexto = null) {
     // Validar tipos antes de procesar
     if (!Array.isArray(coleccion)) {
@@ -251,10 +251,10 @@ function procesarConCallback(coleccion, callback, contexto = null) {
 ```
 
 **Mejoras Implementadas:**
-- ✅ Validación de tipos (previene bugs silenciosos)
-- ✅ Soporte de contexto (`this`) en callbacks
-- ✅ Mensajes de error descriptivos
-- ✅ Mejor mantenibilidad y debugging
+- Si: Validación de tipos (previene bugs silenciosos)
+- Si: Soporte de contexto (`this`) en callbacks
+- Si: Mensajes de error descriptivos
+- Si: Mejor mantenibilidad y debugging
 
 ---
 
@@ -326,10 +326,10 @@ El diagrama visual explica a un público no técnico:
 ### Conclusión
 
 **La IA no reemplazó mi pensamiento; lo multiplicó:**
-- ✅ Sugirió caminos que no había considerado
-- ✅ Me desafió a romper patrones convencionales
-- ✅ Validó mis decisiones con data concreta
-- ✅ Facilitó la comunicación de ideas complejas
+- Si: Sugirió caminos que no había considerado
+- Si: Me desafió a romper patrones convencionales
+- Si: Validó mis decisiones con data concreta
+- Si: Facilitó la comunicación de ideas complejas
 
 **Dominio adquirido:**
 - No solo **uso** funciones de orden superior; ahora las **entiendo y optimizo**
@@ -391,5 +391,5 @@ python -m http.server 8000
 ---
 
 **Documento Generado:** 5 de Diciembre de 2025  
-**Estado del Proyecto:** ✅ Completo y Funcional  
+**Estado del Proyecto:** [COMPLETO Y FUNCIONAL]  
 **Licencia:** MIT
