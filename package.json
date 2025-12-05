@@ -4,6 +4,7 @@
   "description": "**Autor:** [Tu Nombre]  \r **Fecha de Entrega:** 5 de Diciembre de 2025  \r **Nivel:** Bootcamp JavaScript",
   "main": "api-handler.js",
   "scripts": {
+    "prepare": "husky install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
