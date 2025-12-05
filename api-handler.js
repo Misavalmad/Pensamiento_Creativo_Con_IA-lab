@@ -70,8 +70,8 @@ const TEAMS_DATA = {
 };
 
 /**
- * Fetch de jugadores desde API Real (football-data.org)
- * API gratuita pública sin autenticación requerida
+ * Fetch de jugadores desde API Real con soporte CORS
+ * Usando múltiples fuentes con fallback automático
  */
 async function cargarEquipoDesdeAPI(teamName) {
     const teamData = TEAMS_DATA[teamName];
@@ -84,41 +84,81 @@ async function cargarEquipoDesdeAPI(teamName) {
     try {
         mostrarCargando(true);
         
-        // Fetch desde football-data.org (API real gratuita)
-        // Endpoint: obtiene los jugadores de un equipo específico
-        const response = await fetch(
-            `https://api.football-data.org/v4/teams/${teamData.apiId}/squad`,
-            {
-                headers: { 'X-Auth-Token': '' } // API pública sin token requerido
-            }
-        );
+        // Intento 1: API con CORS habilitado (usando proxy)
+        // Usando un servicio CORS público como proxy
+        const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+        const apiUrl = `https://api.football-data.org/v4/teams/${teamData.apiId}/squad`;
         
-        if (response.ok) {
-            const data = await response.json();
+        try {
+            const response = await fetch(proxyUrl + apiUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
             
-            // Transformar datos reales de la API
-            if (data.squad && data.squad.length > 0) {
-                const jugadoresAPI = data.squad.slice(0, 6).map((player, index) => ({
-                    id: index + 1,
-                    nombre: player.name,
-                    posicion: player.position,
-                    nacionalidad: player.nationality,
-                    goles: Math.floor(Math.random() * 30),
-                    asistencias: Math.floor(Math.random() * 20),
-                    minutos: 2500 + Math.floor(Math.random() * 500),
-                    tarjetas: Math.floor(Math.random() * 6)
-                }));
+            if (response.ok) {
+                const data = await response.json();
                 
-                jugadores = jugadoresAPI;
-                mostrarCargando(false);
-                limpiarResultados();
-                console.log('✅ Datos cargados desde API Real (football-data.org):', teamName);
-                return true;
+                // Transformar datos reales de la API
+                if (data.squad && data.squad.length > 0) {
+                    const jugadoresAPI = data.squad.slice(0, 6).map((player, index) => ({
+                        id: index + 1,
+                        nombre: player.name,
+                        posicion: player.position,
+                        nacionalidad: player.nationality,
+                        goles: Math.floor(Math.random() * 30),
+                        asistencias: Math.floor(Math.random() * 20),
+                        minutos: 2500 + Math.floor(Math.random() * 500),
+                        tarjetas: Math.floor(Math.random() * 6)
+                    }));
+                    
+                    jugadores = jugadoresAPI;
+                    mostrarCargando(false);
+                    limpiarResultados();
+                    console.log('✅ Datos cargados desde API Real (football-data.org):', teamName);
+                    console.log('Jugadores reales:', jugadoresAPI.map(j => j.nombre).join(', '));
+                    return true;
+                }
             }
+        } catch (proxyError) {
+            console.warn('⚠️ CORS proxy no disponible, intentando fetch directo...');
         }
         
-        // Fallback a datos generados si la API falla
-        console.warn('⚠️ API no disponible, usando datos generados locales');
+        // Intento 2: Fetch directo (puede fallar por CORS pero vale intentar)
+        try {
+            const response = await fetch(
+                `https://api.football-data.org/v4/teams/${teamData.apiId}/squad`,
+                { headers: { 'X-Auth-Token': '' } }
+            );
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.squad && data.squad.length > 0) {
+                    const jugadoresAPI = data.squad.slice(0, 6).map((player, index) => ({
+                        id: index + 1,
+                        nombre: player.name,
+                        posicion: player.position,
+                        nacionalidad: player.nationality,
+                        goles: Math.floor(Math.random() * 30),
+                        asistencias: Math.floor(Math.random() * 20),
+                        minutos: 2500 + Math.floor(Math.random() * 500),
+                        tarjetas: Math.floor(Math.random() * 6)
+                    }));
+                    
+                    jugadores = jugadoresAPI;
+                    mostrarCargando(false);
+                    limpiarResultados();
+                    console.log('✅ Datos cargados desde API Real (football-data.org):', teamName);
+                    return true;
+                }
+            }
+        } catch (directError) {
+            console.warn('⚠️ Fetch directo falló (CORS), usando fallback...');
+        }
+        
+        // Fallback: datos generados locales realistas
+        console.warn('⚠️ API no disponible, usando datos generados locales (nombres reales)');
         const jugadoresGenerados = teamData.fallbackPlayers.map((nombre, index) => 
             generarDatosJugador(nombre, index)
         );
@@ -127,13 +167,14 @@ async function cargarEquipoDesdeAPI(teamName) {
         mostrarCargando(false);
         limpiarResultados();
         console.log('Equipo cargado con datos generados:', teamName);
+        console.log('Jugadores (fallback):', jugadoresGenerados.map(j => j.nombre).join(', '));
         
         return true;
         
     } catch (error) {
-        console.error('❌ Error en API:', error.message);
+        console.error('❌ Error inesperado:', error.message);
         
-        // Fallback seguro a datos generados
+        // Fallback final: datos generados
         const jugadoresGenerados = teamData.fallbackPlayers.map((nombre, index) => 
             generarDatosJugador(nombre, index)
         );
@@ -141,7 +182,7 @@ async function cargarEquipoDesdeAPI(teamName) {
         jugadores = jugadoresGenerados;
         mostrarCargando(false);
         limpiarResultados();
-        console.log('Usando fallback de datos para:', teamName);
+        console.log('Usando fallback final de datos para:', teamName);
         
         return true;
     }
