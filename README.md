@@ -558,72 +558,101 @@ npx prettier --write script.js api-handler.js
 
 ---
 
-## API Integrada
+## API Integrada - Datos Reales en Tiempo Real
 
-El proyecto **intenta conectarse a una API real (TheSportsDB)** para obtener datos actualizados de jugadores. Si la API falla o hay problemas de CORS, automáticamente usa **datos generados localmente de forma realista**.
+El proyecto **conecta con una API real gratuita** (`football-data.org`) para obtener datos actualizados de jugadores profesionales. Es una API pública sin autenticación requerida.
 
-### Flujo de Datos
+### Cómo Funciona
 
-1. **Intentar API Real:** El código intenta conectar con TheSportsDB (una API gratuita de deportes)
-2. **Fallback Automático:** Si falla, genera datos locales basados en nombres reales de jugadores actuales
-3. **Sin Intervención:** Todo sucede automáticamente, el usuario solo selecciona un equipo
+1. **Fetch en Tiempo Real:** Cuando seleccionas un equipo, el código solicita los jugadores reales desde `football-data.org`
+2. **Datos Auténticos:** Los nombres y posiciones provienen de la API real
+3. **Stats Generados:** Los datos estadísticos (goles, asistencias, etc.) se generan dinámicamente para demostración
+4. **Fallback Automático:** Si la API no responde (error de conexión, rate limit), usa datos generados localmente
 
-### Cómo Funciona en `api-handler.js`
+### Flujo Técnico
 
 ```javascript
+// En api-handler.js
 async function cargarEquipoDesdeAPI(teamName) {
     try {
-        // 1. Intentar fetch desde TheSportsDB
+        // 1. Solicitar jugadores reales desde API
         const response = await fetch(
-            `https://www.thesportsdb.com/api/v1/json/3/eventslast.php?id=${teamData.id}`
+            `https://api.football-data.org/v4/teams/${teamData.apiId}/squad`
         );
         
         if (response.ok) {
-            // Usar datos reales
+            const data = await response.json();
+            // 2. Transformar nombres/posiciones reales
+            const jugadoresAPI = data.squad.slice(0, 6).map((player, index) => ({
+                nombre: player.name,              // Nombre real
+                posicion: player.position,        // Posición real
+                nacionalidad: player.nationality, // Nacionalidad real
+                goles: Math.random() * 30,        // Stats para demostración
+                asistencias: Math.random() * 20,
+                // ... más stats
+            }));
+            
             jugadores = jugadoresAPI;
             return true;
         }
     } catch (error) {
-        // 2. Fallback automático: generar datos locales
-        const jugadoresGenerados = teamData.players.map((nombre, index) => 
-            generarDatosJugador(nombre, index)
-        );
+        // 3. Si falla: fallback automático a datos generados
+        const jugadoresGenerados = generarDatosJugador(...);
         jugadores = jugadoresGenerados;
         return true;
     }
 }
 ```
 
-### Equipos Disponibles (Datos Reales)
+### Equipos Disponibles (IDs reales de football-data.org)
 
-- Manchester United
-- Manchester City
-- Liverpool
-- Arsenal
-- Chelsea
-- Real Madrid
-- Barcelona
-- Paris Saint-Germain
-- Bayern Munich
-- Juventus
+| Equipo | Liga | ID |
+|--------|------|-----|
+| Manchester United | English Premier League | 66 |
+| Manchester City | English Premier League | 67 |
+| Liverpool | English Premier League | 64 |
+| Arsenal | English Premier League | 57 |
+| Chelsea | English Premier League | 61 |
+| Real Madrid | Spanish La Liga | 86 |
+| Barcelona | Spanish La Liga | 81 |
+| Paris Saint-Germain | French Ligue 1 | 80 |
+| Bayern Munich | German Bundesliga | 9 |
+| Juventus | Italian Serie A | 109 |
 
-**Nota:** Cada equipo tiene nombres reales de jugadores actuales, aunque los stats (goles, asistencias, etc.) se generan dinámicamente para demostración.
+### Verificar en Consola
 
-### Para Ampliar: Integrar Otra API
+Abre la consola (F12) y selecciona un equipo. Verás logs como:
+- `✅ Datos cargados desde API Real (football-data.org): Manchester United`
+- O `⚠️ API no disponible, usando datos generados locales` (si hay error de conexión)
 
-Si quieres cambiar a otra API de fútbol:
+### Limitaciones y Notas
+
+- **Sin autenticación:** La API es pública pero tiene un limite de ~10 requests por minuto
+- **Nombres reales:** Los jugadores que ves son reales del equipo
+- **Stats generados:** Los números de goles/asistencias son para demostración (no datos históricos)
+- **Offline:** Si no hay conexión, todo sigue funcionando con datos locales
+
+### Para Expandir: Usar Otra API
+
+Si quieres cambiar a otra fuente de datos:
 
 ```javascript
-// En api-handler.js, modifica la función cargarEquipoDesdeAPI()
-// Ejemplo con otra API (p.ej, rapidapi-football):
-
-const response = await fetch('https://api.example.com/teams/...', {
-    headers: { 'x-api-key': 'TU_API_KEY' }
-});
+// Ejemplo: usando otra API de deportes
+const response = await fetch('https://api.ejemplo.com/teams/id/players');
 const data = await response.json();
-const jugadoresNuevos = transformarDatosAPI(data, teamData.players);
-jugadores = jugadoresNuevos;
+
+// Transforma al formato local
+const jugadores = data.players.map(p => ({
+    nombre: p.playerName,
+    posicion: p.position,
+    // ... más campos
+}));
 ```
+
+**Alternativas de APIs:**
+- `api-football.com` (requiere API key, pero más datos)
+- `sportsdata.io` (pago, datos muy completos)
+- `thesportsdb.com` (gratuita, menos confiable)
 
 ---
 
