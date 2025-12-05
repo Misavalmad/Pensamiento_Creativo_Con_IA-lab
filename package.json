@@ -1,0 +1,25 @@
+{
+  "name": "pensamiento_creativo_con_ia-lab",
+  "version": "1.0.0",
+  "description": "**Autor:** [Tu Nombre]  \r **Fecha de Entrega:** 5 de Diciembre de 2025  \r **Nivel:** Bootcamp JavaScript",
+  "main": "api-handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Misavalmad/Pensamiento_Creativo_Con_IA-lab.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Misavalmad/Pensamiento_Creativo_Con_IA-lab/issues"
+  },
+  "homepage": "https://github.com/Misavalmad/Pensamiento_Creativo_Con_IA-lab#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "husky": "^9.1.7"
+  }
+}
