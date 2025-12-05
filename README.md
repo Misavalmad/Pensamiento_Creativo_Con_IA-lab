@@ -560,17 +560,42 @@ npx prettier --write script.js api-handler.js
 
 ## API Integrada
 
-El proyecto usa datos dinámicos generados. Si quieres integrar una API real:
+El proyecto **intenta conectarse a una API real (TheSportsDB)** para obtener datos actualizados de jugadores. Si la API falla o hay problemas de CORS, automáticamente usa **datos generados localmente de forma realista**.
+
+### Flujo de Datos
+
+1. **Intentar API Real:** El código intenta conectar con TheSportsDB (una API gratuita de deportes)
+2. **Fallback Automático:** Si falla, genera datos locales basados en nombres reales de jugadores actuales
+3. **Sin Intervención:** Todo sucede automáticamente, el usuario solo selecciona un equipo
+
+### Cómo Funciona en `api-handler.js`
 
 ```javascript
-// En api-handler.js, modifica la función cargarEquipoDesdeAPI()
-// Ejemplo con otra API:
-
-const response = await fetch('https://api.ejemplo.com/teams/...');
-const data = await response.json();
+async function cargarEquipoDesdeAPI(teamName) {
+    try {
+        // 1. Intentar fetch desde TheSportsDB
+        const response = await fetch(
+            `https://www.thesportsdb.com/api/v1/json/3/eventslast.php?id=${teamData.id}`
+        );
+        
+        if (response.ok) {
+            // Usar datos reales
+            jugadores = jugadoresAPI;
+            return true;
+        }
+    } catch (error) {
+        // 2. Fallback automático: generar datos locales
+        const jugadoresGenerados = teamData.players.map((nombre, index) => 
+            generarDatosJugador(nombre, index)
+        );
+        jugadores = jugadoresGenerados;
+        return true;
+    }
+}
 ```
 
-Equipos disponibles:
+### Equipos Disponibles (Datos Reales)
+
 - Manchester United
 - Manchester City
 - Liverpool
@@ -581,6 +606,24 @@ Equipos disponibles:
 - Paris Saint-Germain
 - Bayern Munich
 - Juventus
+
+**Nota:** Cada equipo tiene nombres reales de jugadores actuales, aunque los stats (goles, asistencias, etc.) se generan dinámicamente para demostración.
+
+### Para Ampliar: Integrar Otra API
+
+Si quieres cambiar a otra API de fútbol:
+
+```javascript
+// En api-handler.js, modifica la función cargarEquipoDesdeAPI()
+// Ejemplo con otra API (p.ej, rapidapi-football):
+
+const response = await fetch('https://api.example.com/teams/...', {
+    headers: { 'x-api-key': 'TU_API_KEY' }
+});
+const data = await response.json();
+const jugadoresNuevos = transformarDatosAPI(data, teamData.players);
+jugadores = jugadoresNuevos;
+```
 
 ---
 
