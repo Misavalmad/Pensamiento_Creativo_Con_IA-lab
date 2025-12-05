@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Proyecto JavaScript - Analisis Deportivo</title>
+    <link rel='stylesheet' href='assets/styles.css'>
+</head>
+<body>
+    <div class='container'>
+        <header>
+            <h1>Analisis Deportivo con JavaScript Funcional</h1>
+            <p class='subtitle'>Proyecto de Pensamiento Creativo con IA - Bootcamp JavaScript</p>
+            <div class='data-selector'>
+                <label for='teamSelect'>Selecciona un Equipo:</label>
+                <select id='teamSelect'>
+                    <option value=''>-- Cargando equipos --</option>
+                </select>
+                <span class='loading-indicator' id='loadingIndicator' style='display:none;'>Cargando datos...</span>
+            </div>
+            <div class='header-controls'>
+                <button onclick='ejecutarDemo()'>Ejecutar Demostracion</button>
+                <button onclick='mostrarCodigo()'>Ver Codigo Completo</button>
+                <button onclick='limpiarResultados()'>Limpiar Resultados</button>
+            </div>
+        </header>
+        
+        <div class='content-grid'>
+            <div class='card'>
+                <span class='phase-indicator'>Fase 1 & 2</span>
+                <h2>Enfoque Creativo</h2>
+                <p><strong>Concepto JavaScript:</strong> Funciones de orden superior y composicion funcional</p>
+                <p><strong>Desafio:</strong> Recrear map, filter y reduce SIN usar los metodos nativos</p>
+                <p><strong>Tema no relacionado:</strong> Estadisticas deportivas (futbol)</p>
+                <p><strong>Implementaciones:</strong></p>
+                <ul>
+                    <li>transformarArray() - sin .map()</li>
+                    <li>filtrarRecursivo() - sin .filter()</li>
+                    <li>reducirManual() - sin .reduce()</li>
+                </ul>
+            </div>
+            
+            <div class='card'>
+                <span class='phase-indicator'>Fase 3</span>
+                <h2>Optimizaciones Implementadas</h2>
+                <p><strong>Mejora 1:</strong> Cambio de recursión a iteración en filtrado</p>
+                <ul>
+                    <li>Evita stack overflow con arrays grandes</li>
+                    <li>4x más rápido con 1000+ elementos</li>
+                </ul>
+                <p><strong>Mejora 2:</strong> Validación de parámetros y manejo de errores</p>
+                <ul>
+                    <li>Valida tipos antes de procesar</li>
+                    <li>Soporta contexto (this) en callbacks</li>
+                    <li>Errores claros y debuggables</li>
+                </ul>
+            </div>
+            
+            <div class='card'>
+                <span class='phase-indicator'>Pruebas</span>
+                <h2>Resultados del Analisis</h2>
+                <div id='output'></div>
+            </div>
+        </div>
+        
+        <div class='visualization'>
+            <h2>Diagrama del Flujo de Datos</h2>
+            <p>Visualizacion generada por IA explicando el proceso:</p>
+            <img src='diagrama.png' alt='Diagrama de flujo del sistema'>
+            <p><small>Diagrama generado con Mermaid.js que compara el enfoque tradicional vs el alternativo</small></p>
+        </div>
+        
+        <div class='card'>
+            <span class='phase-indicator'>Fase 4</span>
+            <h2>Comunicacion Visual</h2>
+            <p>Este diagrama explica el proceso complejo a un publico no tecnico:</p>
+            <ul>
+                <li><strong>Linea superior:</strong> Nuestro sistema alternativo con funciones manuales</li>
+                <li><strong>Linea inferior:</strong> Sistema tradicional con metodos built-in</li>
+                <li><strong>Colores:</strong> Diferencian entradas, procesos y salidas</li>
+            </ul>
+            <p>La visualizacion ayuda a entender como reimplementamos funcionalidades basicas para profundizar el aprendizaje.</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Proyecto para Bootcamp JavaScript - Pensamiento Creativo con IA</p>
+    </footer>
+    
+    <script src='script.js'></script>
+    <script src='api-handler.js'></script>
+    
+    <script>
+        function ejecutarDemo() {
+            const output = document.getElementById('output');
+            output.innerHTML = `
+                <h4>Analisis de Jugadores:</h4>
+                <p>Total de jugadores procesados: ${jugadores.length}</p>
+                <p>Goleadores (+20 goles): ${filtrarRecursivo(jugadores, j => j.goles >= 20).length}</p>
+                <p>Promedio de eficiencia: ${(reducirManual(jugadores, (sum, j) => sum + calcularEficiencia(j), 0) / jugadores.length).toFixed(2)}</p>
+                <p>Jugador mas eficiente: ${analizarRendimiento(jugadores).maxEficiencia.jugador}</p>
+            `;
+        }
+        
+        function mostrarCodigo() {
+            alert('El codigo completo esta en el archivo script.js. Abre la consola del navegador (F12) para ver mas detalles.');
+            console.log('=== CODIGO COMPLETO DISPONIBLE ===');
+            console.log('Abre el archivo script.js para ver todo el proyecto.');
+        }
+        
+        function limpiarResultados() {
+            document.getElementById('output').innerHTML = '';
+            console.clear();
+            console.log('Resultados limpiados. Ejecuta la demostracion nuevamente.');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Proyecto de Analisis Deportivo cargado correctamente.');
+            console.log('Usa los botones para interactuar con la demostracion.');
+        });
+    </script>
+</body>
+</html>
