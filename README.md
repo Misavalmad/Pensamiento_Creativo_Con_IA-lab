@@ -146,7 +146,43 @@ Logro de Fase 2: Se implementó cada método rompiendo la práctica estándar, p
 ### Prompt a la IA (Fase 3)
 ```
 "Analiza este código de análisis deportivo en JavaScript:
-[código aquí]
+
+function transformarArray(array, transformador) {
+    const resultado = [];
+    for (let i = 0; i < array.length; i++) {
+        resultado.push(transformador(array[i], i, array));
+    }
+    return resultado;
+}
+
+function filtrarRecursivo(array, criterio, indice = 0, acumulado = []) {
+    if (indice >= array.length) {
+        return acumulado;
+    }
+    if (criterio(array[indice], indice, array)) {
+        acumulado.push(array[indice]);
+    }
+    return filtrarRecursivo(array, criterio, indice + 1, acumulado);
+}
+
+function reducirManual(array, reductor, valorInicial) {
+    let acumulador = valorInicial;
+    for (let i = 0; i < array.length; i++) {
+        acumulador = reductor(acumulador, array[i], i, array);
+    }
+    return acumulador;
+}
+
+function* generadorEstadisticas(array) {
+    for (const jugador of array) {
+        const eficiencia = calcularEficiencia(jugador);
+        yield {
+            ...jugador,
+            eficiencia,
+            categoria: clasificarJugador(eficiencia)
+        };
+    }
+}
 
 Evalúa:
 1. Legibilidad
