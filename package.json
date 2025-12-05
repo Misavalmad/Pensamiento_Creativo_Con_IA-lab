@@ -2,7 +2,7 @@
   "name": "pensamiento_creativo_con_ia-lab",
   "version": "1.0.0",
   "description": "**Autor:** [Tu Nombre]  \r **Fecha de Entrega:** 5 de Diciembre de 2025  \r **Nivel:** Bootcamp JavaScript",
-  "main": "api-handler.js",
+  "main": "script.js",
   "scripts": {
     "prepare": "husky install",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -558,101 +558,80 @@ npx prettier --write script.js api-handler.js
 
 ---
 
-## API Integrada - Datos Reales en Tiempo Real
+## Datos Dinámicos - Equipos y Jugadores Reales
 
-El proyecto **conecta con una API real gratuita** (`football-data.org`) para obtener datos actualizados de jugadores profesionales. Es una API pública sin autenticación requerida.
+El proyecto usa **datos generados dinámicamente con nombres reales de jugadores profesionales**. Cada vez que seleccionas un equipo, se crean estadísticas realistas para jugadores actuales de ese equipo.
 
 ### Cómo Funciona
 
-1. **Fetch en Tiempo Real:** Cuando seleccionas un equipo, el código solicita los jugadores reales desde `football-data.org`
-2. **Datos Auténticos:** Los nombres y posiciones provienen de la API real
-3. **Stats Generados:** Los datos estadísticos (goles, asistencias, etc.) se generan dinámicamente para demostración
-4. **Fallback Automático:** Si la API no responde (error de conexión, rate limit), usa datos generados localmente
+1. **Selección de Equipo:** Eliges un equipo de las ligas principales
+2. **Nombres Reales:** Los jugadores corresponden a plantillas reales actualizadas
+3. **Stats Generados:** Goles, asistencias y minutos se generan dinámicamente con distribuciones realistas
+4. **Variación por Posición:** Los delanteros tienen más goles, mediocampistas más asistencias, etc.
 
-### Flujo Técnico
+### Implementación Técnica
 
 ```javascript
 // En api-handler.js
 async function cargarEquipoDesdeAPI(teamName) {
-    try {
-        // 1. Solicitar jugadores reales desde API
-        const response = await fetch(
-            `https://api.football-data.org/v4/teams/${teamData.apiId}/squad`
-        );
-        
-        if (response.ok) {
-            const data = await response.json();
-            // 2. Transformar nombres/posiciones reales
-            const jugadoresAPI = data.squad.slice(0, 6).map((player, index) => ({
-                nombre: player.name,              // Nombre real
-                posicion: player.position,        // Posición real
-                nacionalidad: player.nationality, // Nacionalidad real
-                goles: Math.random() * 30,        // Stats para demostración
-                asistencias: Math.random() * 20,
-                // ... más stats
-            }));
-            
-            jugadores = jugadoresAPI;
-            return true;
-        }
-    } catch (error) {
-        // 3. Si falla: fallback automático a datos generados
-        const jugadoresGenerados = generarDatosJugador(...);
-        jugadores = jugadoresGenerados;
-        return true;
-    }
+    // Simular delay de carga (realismo)
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // Generar datos con nombres reales
+    const jugadoresGenerados = teamData.fallbackPlayers.map((nombre, index) => 
+        generarDatosJugador(nombre, index)
+    );
+    
+    jugadores = jugadoresGenerados;
+}
+
+function generarDatosJugador(nombre, index) {
+    // Distribución según posición
+    const esDelantero = index < 3;
+    const goles = esDelantero ? 
+        Math.floor(Math.random() * 35) + 5 :  // 5-40 goles
+        Math.floor(Math.random() * 15);       // 0-15 goles
+    
+    return { nombre, goles, asistencias, minutos, tarjetas };
 }
 ```
 
-### Equipos Disponibles (IDs reales de football-data.org)
+### Equipos Disponibles
 
-| Equipo | Liga | ID |
-|--------|------|-----|
-| Manchester United | English Premier League | 66 |
-| Manchester City | English Premier League | 67 |
-| Liverpool | English Premier League | 64 |
-| Arsenal | English Premier League | 57 |
-| Chelsea | English Premier League | 61 |
-| Real Madrid | Spanish La Liga | 86 |
-| Barcelona | Spanish La Liga | 81 |
-| Paris Saint-Germain | French Ligue 1 | 80 |
-| Bayern Munich | German Bundesliga | 9 |
-| Juventus | Italian Serie A | 109 |
+| Equipo | Liga | Jugadores Reales |
+|--------|------|------------------|
+| Manchester United | English Premier League | ✅ |
+| Manchester City | English Premier League | ✅ |
+| Liverpool | English Premier League | ✅ |
+| Arsenal | English Premier League | ✅ |
+| Chelsea | English Premier League | ✅ |
+| Real Madrid | Spanish La Liga | ✅ |
+| Barcelona | Spanish La Liga | ✅ |
+| Paris Saint-Germain | French Ligue 1 | ✅ |
+| Bayern Munich | German Bundesliga | ✅ |
+| Juventus | Italian Serie A | ✅ |
 
 ### Verificar en Consola
 
-Abre la consola (F12) y selecciona un equipo. Verás logs como:
-- `✅ Datos cargados desde API Real (football-data.org): Manchester United`
-- O `⚠️ API no disponible, usando datos generados locales` (si hay error de conexión)
-
-### Limitaciones y Notas
-
-- **Sin autenticación:** La API es pública pero tiene un limite de ~10 requests por minuto
-- **Nombres reales:** Los jugadores que ves son reales del equipo
-- **Stats generados:** Los números de goles/asistencias son para demostración (no datos históricos)
-- **Offline:** Si no hay conexión, todo sigue funcionando con datos locales
-
-### Para Expandir: Usar Otra API
-
-Si quieres cambiar a otra fuente de datos:
-
-```javascript
-// Ejemplo: usando otra API de deportes
-const response = await fetch('https://api.ejemplo.com/teams/id/players');
-const data = await response.json();
-
-// Transforma al formato local
-const jugadores = data.players.map(p => ({
-    nombre: p.playerName,
-    posicion: p.position,
-    // ... más campos
-}));
+Abre la consola (F12) y selecciona un equipo. Verás:
+```
+✅ Equipo cargado: Manchester United
+Jugadores: Bruno Fernandes, Harry Maguire, Aaron Wan-Bissaka, Luke Shaw, David de Gea
 ```
 
-**Alternativas de APIs:**
-- `api-football.com` (requiere API key, pero más datos)
-- `sportsdata.io` (pago, datos muy completos)
-- `thesportsdb.com` (gratuita, menos confiable)
+### ¿Por Qué No Usar una API Real?
+
+Las APIs de fútbol gratuitas tienen limitaciones:
+- **Requieren autenticación:** Necesitas API keys y registro
+- **Límites de rate:** Máximo 10-100 requests por día
+- **CORS:** No funcionan desde el navegador sin servidor proxy
+- **Datos incompletos:** Muchas no devuelven stats actualizadas
+
+Esta solución es **perfecta para demostración** porque:
+- ✅ Funciona sin configuración adicional
+- ✅ No tiene límites de uso
+- ✅ Usa nombres reales de jugadores actuales
+- ✅ Genera datos realistas con distribuciones correctas
 
 ---
 
