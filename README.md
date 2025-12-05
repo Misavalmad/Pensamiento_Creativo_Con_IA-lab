@@ -572,7 +572,7 @@ El proyecto usa **datos generados dinámicamente con nombres reales de jugadores
 ### Implementación Técnica
 
 ```javascript
-// En api-handler.js
+// En data-loader.js
 async function cargarEquipoDesdeAPI(teamName) {
     // Simular delay de carga (realismo)
     await new Promise(resolve => setTimeout(resolve, 800));
