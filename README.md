@@ -1,11 +1,5 @@
 # Proyecto: Análisis Deportivo con JavaScript Funcional
 
-## Pensamiento Creativo con IA - Bootcamp JavaScript
-
-**Autor:** [Tu Nombre]  
-**Fecha de Entrega:** 5 de Diciembre de 2025  
-**Nivel:** Bootcamp JavaScript  
-
 ---
 
 ## Objetivo
